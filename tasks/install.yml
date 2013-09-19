@@ -1,0 +1,18 @@
+---
+- name: check if jruby is already installed (to avoid the download)
+  shell: ls -l $jruby_install_root | egrep '.+jruby\-$jruby_version_escaped$'
+  register: jruby_installed
+  ignore_errors: yes
+
+- name: download the jruby tar.gz archive
+  get_url: url=http://jruby.org.s3.amazonaws.com/downloads/$jruby_version/jruby-bin-$jruby_version.tar.gz
+           dest=/tmp/jruby-bin-$jruby_version.tar.gz
+  when: "jruby_installed.rc == 1"
+
+- name: unpack the jruby tar.gz archive
+  command: tar zxf /tmp/jruby-bin-$jruby_version.tar.gz -C $jruby_install_root creates=$jruby_install_path
+  sudo: true
+
+- name: add jruby.sh to /etc/profile.d
+  template: src=$home/jruby/templates/jruby.sh.j2 dest=/etc/profile.d/jruby.sh mode=0755
+  sudo: true

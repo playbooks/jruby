@@ -1,0 +1,5 @@
+---
+jruby_version: 1.7.4
+jruby_version_escaped: 1\.7\.4
+jruby_install_root: /opt
+jruby_install_path: $jruby_install_root/jruby-$jruby_version

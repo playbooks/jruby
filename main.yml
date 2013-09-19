@@ -1,0 +1,11 @@
+---
+-
+  hosts: all
+
+  vars_files:
+  - $home/jruby/vars/main.yml
+  - $home/jruby/vars/bundler.yml
+
+  tasks:
+  - include: $home/jruby/tasks/install.yml
+  - include: $home/jruby/tasks/install_bundler.yml

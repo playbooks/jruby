@@ -1,0 +1,17 @@
+---
+- name: check if bundler is already installed (to avoid the download)
+  shell: ls -l $jruby_install_path/lib/ruby/gems/shared/gems | egrep '.+bundler\-$bundler_version_escaped$'
+  register: bundler_installed
+  ignore_errors: yes
+
+- name: download the bundler gem
+  get_url: url=https://rubygems.org/downloads/bundler-$bundler_version.gem
+           dest=/tmp/bundler-$bundler_version.gem
+  when: "bundler_installed.rc == 1"
+
+- name: install the bundler gem
+  command: jgem install /tmp/bundler-$bundler_version.gem --no-rdoc --no-ri 
+           creates=$jruby_install_path/lib/ruby/gems/shared/gems/bundler-$bundler_version
+  environment:
+    PATH: /bin:/usr/bin:$java_install_path/bin:$jruby_install_path/bin
+  sudo: true
